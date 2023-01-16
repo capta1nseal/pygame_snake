@@ -23,7 +23,9 @@ class UI:
             "font": 0xFFFFFF
         }
 
-        self.screen = pygame.display.set_mode(self.window_constants["window_size"], pygame.RESIZABLE)
+        self.screen = pygame.display.set_mode(
+            self.window_constants["window_size"],
+            pygame.RESIZABLE)
         self.screen.fill(self.colours["background"])
 
         self.calculate_scaling()
@@ -32,7 +34,7 @@ class UI:
         self.pxgrid = pygame.PixelArray(self.small_surface)
 
         self.fullscreen = False
-    
+
     def calculate_scaling(self) -> None:
         '''
         calculate constants required for drawing the game
@@ -53,7 +55,7 @@ class UI:
         self.window_constants["inset_game_position"] = (
             window_size[0] / 2 - self.window_constants["scaled_game_size"][0] / 2,
             window_size[1] / 2 - self.window_constants["scaled_game_size"][1] / 2)
-    
+
     def toggle_fullscreen(self) -> None:
         '''change between fullscreen and windowed display modes'''
         if self.fullscreen:
@@ -64,7 +66,7 @@ class UI:
             self.screen = pygame.display.set_mode(
                 (0, 0), pygame.RESIZABLE | pygame.FULLSCREEN)
             self.fullscreen = True
-        
+
         self.window_constants["window_size"] = self.screen.get_size()
         self.calculate_scaling()
 
@@ -79,11 +81,11 @@ class UI:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.logic.stop()
-            
+
             elif event.type == pygame.VIDEORESIZE:
                 self.window_constants["window_size"] = event.size
                 self.calculate_scaling()
-                
+
                 if self.fullscreen:
                     self.screen = pygame.display.set_mode(
                         self.window_constants["window_size"], pygame.RESIZABLE | pygame.FULLSCREEN)
@@ -93,7 +95,7 @@ class UI:
                         self.window_constants["window_size"], pygame.RESIZABLE)
                 self.screen.fill(self.colours["background"])
                 pygame.display.update()
-            
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.logic.stop()
@@ -107,7 +109,7 @@ class UI:
                     self.logic.set_new_direction(2)
                 elif event.key in (pygame.K_LEFT, pygame.K_a):
                     self.logic.set_new_direction(3)
-    
+
     def draw(self) -> None:
         '''draw game to pygame screen surface and display'''
         snake = self.logic.get_snake()
@@ -116,17 +118,16 @@ class UI:
         for x in range(0, self.logic.get_dimensions()[0]):
             for y in range(0, self.logic.get_dimensions()[1]):
                 if (x, y) == apple:
-                    self.pxgrid[x, y] = self.colours["apple"]
+                    self.pxgrid[x, y] = self.colours["apple"] #type: ignore
                 elif (not (x, y) in snake) and ((x + y) % 2):
-                    self.pxgrid[x, y] = self.colours["grid_light"]
+                    self.pxgrid[x, y] = self.colours["grid_light"] #type: ignore
 
-        self.pxgrid[snake[0][0], snake[0][1]] = self.colours["snake_head"]
+        self.pxgrid[snake[0][0], snake[0][1]] = self.colours["snake_head"] #type: ignore
         for x, y in snake[1:]:
-            self.pxgrid[x, y] = self.colours["snake_tail"]
+            self.pxgrid[x, y] = self.colours["snake_tail"] #type: ignore
 
         scaled_game_size = self.window_constants["scaled_game_size"]
         inset_game_position = self.window_constants["inset_game_position"]
-        square_size = scaled_game_size[1] / self.logic.get_dimensions()[1]
 
         self.screen.blit(pygame.transform.scale(
             self.small_surface,

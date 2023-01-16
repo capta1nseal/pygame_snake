@@ -9,7 +9,7 @@ from ui import UI
 
 if __name__ == "__main__":
     FPS = 10
-    
+
     clock = Clock()
     logic = Logic()
     ui = UI(logic)
